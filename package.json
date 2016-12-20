@@ -18,6 +18,6 @@
     "monk": "^1.0.1",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0",
-    "ds18b20-raspi": "~0.4.2"
+    "ds18b20-raspi": "~0.2.4"
   }
 }
