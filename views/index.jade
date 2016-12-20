@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to our test
+  
+  #temperature
+    h2 Temperature
+    li
+      p Current Temp
+      labal#lblCurTemp
+      p F
+  
+    form#formToggle(name="toggle",method="post",action="/toggle")
+      button#btnToggle(type='submit', value='Toggle') Toggle
+      label#lblToggle #{thermometer.curTemp}
+    
+  // /WRAPPER
