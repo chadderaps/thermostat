@@ -5,66 +5,39 @@ $(document).ready(function() {
   // Get the temperature and fill the fields
   getThermometer();
 
-  setInterval(getThermometer, 2000);
+  //setInterval(getThermometer, 2000);
 
 });
 
-// Functions =============================================================
-
-function setColor(element, color) {
-  console.log(element.style.backgroundColor);
-  element.style.backgroundColor = color;
+function changeTemp(dir) {
+  var data = {'direction':dir}
+  $.post('/thermometer/changeTemp', {direction: dir});
+  getThermometer();
 };
+
+// Functions =============================================================
 
 function getThermometer() {
   $.getJSON('/thermometer', function (thermometer) {
     console.log(thermometer);
-    thermo = JSON.parse(thermometer)
-    var tempLabel = $('#lblCurTemp')
-    tempLabel.html(thermo.curTemp)
+    thermo = JSON.parse(thermometer);
+    var tempLabel = $('#lblCurTemp');
+    tempLabel.html(thermo.curTemp);
+    $('#lblSetTemp').html(thermo.minTemp);
+
+    setThermostatState(thermo.status)
   });
 };
 
-// Fill table with data
-function populateTable() {
+function setThermostatState(status) {
 
-    // Empty content string
+  state =  ((status) ?  'On' : 'Off');
+  alternateState = ((status) ? 'Off' : 'On')
 
-    // jQuery AJAX call for JSON
-    $.getJSON( '/temperature', function( thermometer ) {
+  enableElem = $('#lblThermo' + state)
+  disableElem = $('#lblThermo' + alternateState)
 
+  enableElem.html(state)
 
-        console.log(thermometer);
-
-        // For each item in our JSON, add a table row and cells to the content string
-
-        // Inject the whole content string into our existing HTML table
-        $('#userList table tbody').html(tableContent);
-    });
-};
-
-function doSomething(event) {
-  console.log('stuff and that');
-};
-
-function showUserInfo(event) {
-  console.log("Got Here");
-
-  event.preventDefault();
-
-  var thisUserName = $(this).attr('rel');
-
-  var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.username;}).indexOf(thisUserName);
-
-  var thisUserObject = userListData[arrayPosition];
-
-  console.log(thisUserObject);
-
-  //Populate Info Box
-  $('#userInfoName').text(thisUserObject.fullname);
-  $('#userInfoAge').text(thisUserObject.age);
-  $('#userInfoGender').text(thisUserObject.gender);
-  $('#userInfoLocation').text(thisUserObject.location);
-
-  setColor($('#userList table th')[0], 'blue');
-};
+  disableElem.html('')
+}

@@ -1,18 +1,19 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to our test
-  
-  #temperature
-    h2 Temperature
-    li
-      p Current Temp
-      labal#lblCurTemp
-      p F
-  
-    form#formToggle(name="toggle",method="post",action="/toggle")
-      button#btnToggle(type='submit', value='Toggle') Toggle
-      label#lblToggle #{thermometer.curTemp}
-    
-  // /WRAPPER
+  #Thermostat
+    h2 Thermostat
+    #TempHolder
+      labal#lblCurTemp.temp-value
+      label#lblTempType F
+      br
+    #SetTempHolder
+      #ThermoStatus
+        label#lblThermoOn.thermo-status
+        label#lblThermoOff.thermo-status
+      label#lblSetTemp.temp-value
+      label#lblTempType F
+      #SetTempButtons
+        button#btnIncrease(type='submit', value='increase', onclick='changeTemp(\'increase\')') &#9650   
+        button#btnDecrease(type='submit', value='decrease', onclick='changeTemp(\'decrease\')') &#9660   
+        
