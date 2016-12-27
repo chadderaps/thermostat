@@ -10,20 +10,27 @@ if debug.enabled
       if typeof digits == 'function'
         cb = digits
         digits = 2
-      cb null, 35
+      cb null, 35.12
 
   sensor = new DummySensor()
 else
   sensor = require 'ds18b20-raspi'
 
+gpio = require 'rpi-gpio'
 
 module.exports =
 class Thermostat
 
   constructor: () ->
+    @heaterGPIO = 0
     @minTemp = 35
     @tempThreshold = 0
     setInterval @readTemp.bind(@), 1000
+
+  setupGPIO: () ->
+    gpio.setup @heaterGPIO, gpio.DIR_OUT, (err) =>
+      throw err if err
+      console.log "Heater gpio is setup"
 
   readTemp: () ->
     sensor.readSimpleF @setCurTemp.bind(@)
@@ -47,8 +54,19 @@ class Thermostat
     @checkTemp()
     return
 
+  _EnableHeater: () ->
+    gpio.write @heaterGPIO, 1, (err) =>
+      throw err if err
+      console.log "Enabled the heater"
+
+  _disableHeater: () ->
+    gpio.write @heaterGPIO, 0, (err) =>
+      throw err if err
+      console.log "Disabled the heater"
+
   checkTemp: () ->
     @status = (@curTemp + @tempThreshold) < @minTemp
+    @_EnableHeater() if @status else @_DisableHeater()
 
   On: () ->
     return @status
