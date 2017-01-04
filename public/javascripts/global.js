@@ -23,7 +23,7 @@ function getThermometer() {
     thermo = JSON.parse(thermometer);
     var tempLabel = $('#lblCurTemp');
     tempLabel.html(thermo.curTemp);
-    $('#lblSetTemp').html(thermo.minTemp);
+    $('#lblSetTemp').html(Math.round(thermo.minTemp));
 
     setThermostatState(thermo.status)
   });

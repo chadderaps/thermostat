@@ -22,15 +22,16 @@ module.exports =
 class Thermostat
 
   constructor: () ->
-    @heaterGPIO = 0
+    @heaterGPIO = { id: 0, init: false }
     @minTemp = 35
     @tempThreshold = 0
+    @setupGPIO()
     setInterval @readTemp.bind(@), 1000
 
   setupGPIO: () ->
     gpio.setup @heaterGPIO, gpio.DIR_OUT, (err) =>
       throw err if err
-      console.log "Heater gpio is setup"
+      debug "Heater gpio is setup"
 
   readTemp: () ->
     sensor.readSimpleF @setCurTemp.bind(@)
@@ -55,14 +56,16 @@ class Thermostat
     return
 
   _EnableHeater: () ->
-    gpio.write @heaterGPIO, 1, (err) =>
+    return if not @heaterGPIO.init
+    gpio.write @heaterGPIO.id, 1, (err) =>
       throw err if err
-      console.log "Enabled the heater"
+      debug "Enabled the heater"
 
   _disableHeater: () ->
+    return if not @heaterGPIO.init
     gpio.write @heaterGPIO, 0, (err) =>
       throw err if err
-      console.log "Disabled the heater"
+      debug "Disabled the heater"
 
   checkTemp: () ->
     @status = (@curTemp + @tempThreshold) < @minTemp
