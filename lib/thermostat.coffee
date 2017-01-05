@@ -1,7 +1,7 @@
 debug = (require 'debug')('thermostat')
 EventEmitter = require 'events'
 
-if debug.enabled
+if debug.enabled and false
   debug 'Running Fake Version of Thermostat'
   class DummySensor
     constructor: () ->
@@ -53,8 +53,8 @@ module.exports =
 class Thermostat
 
   constructor: () ->
-    @heaterGPIO = { id: 0, init: false }
-    @minTemp = 35
+    @heaterGPIO = { id: 17, init: false }
+    @minTemp = 70
     @tempThreshold = 0
     @emitter = new EventEmitter
     @setupGPIO()
@@ -64,6 +64,7 @@ class Thermostat
     gpio.setMode gpio.MODE_BCM
     gpio.setup @heaterGPIO.id, gpio.DIR_OUT, (err) =>
       throw err if err
+      @heaterGPIO.init = true
       debug "Heater gpio is setup"
 
   readTemp: () ->

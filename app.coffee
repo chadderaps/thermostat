@@ -10,9 +10,9 @@ index = require './routes/index'
 users = require './routes/users'
 
 # database
-mongo = require 'mongodb'
-monk = require 'monk'
-db = monk 'localhost:27017/nodetest2'
+#mongo = require 'mongodb'
+#monk = require 'monk'
+#db = monk 'localhost:27017/nodetest2'
 
 app = express();
 
@@ -31,7 +31,6 @@ app.use cookieParser()
 app.use express.static(path.join(__dirname, 'public'))
 
 app.use (req, res, next) =>
-  req.db = db
   req.thermostat = thermo
   next()
 
