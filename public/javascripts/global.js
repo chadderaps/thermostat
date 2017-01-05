@@ -2,6 +2,7 @@
 // DOM Ready =============================================================
 $(document).ready(function() {
 
+  $.ajaxSetup({timeout: 5000})
   // Get the temperature and fill the fields
   getThermometer();
 
@@ -12,20 +13,32 @@ $(document).ready(function() {
 function changeTemp(dir) {
   var data = {'direction':dir}
   $.post('/thermometer/changeTemp', {direction: dir});
-  getThermometer();
+  //getThermometer();
 };
 
 // Functions =============================================================
 
-function getThermometer() {
-  $.getJSON('/thermometer', function (thermometer) {
-    console.log(thermometer);
-    thermo = JSON.parse(thermometer);
+function loadThermostat(therm) {
+    console.log(therm);
+    thermo = JSON.parse(therm);
     var tempLabel = $('#lblCurTemp');
-    tempLabel.html(thermo.curTemp);
-    $('#lblSetTemp').html(Math.round(thermo.minTemp));
 
-    setThermostatState(thermo.status)
+    if (thermo.curTemp !== null) {
+      tempLabel.html(thermo.curTemp);
+      $('#lblSetTemp').html(Math.round(thermo.minTemp));
+
+      setThermostatState(thermo.status);
+    }
+
+    getThermometer();
+}
+
+function getThermometer() {
+  $.ajax({
+    url: '/thermometer',
+    dataType: 'json',
+    success: loadThermostat,
+    error: getThermometer
   });
 };
 

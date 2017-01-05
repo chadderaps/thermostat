@@ -12,7 +12,9 @@ router.get '/', (req, res, next) =>
 
 router.get '/thermometer', (req, res, next) =>
   thermo = req.thermostat
-  res.json JSON.stringify thermo
+
+  thermo.onDidChange () =>
+    res.json JSON.stringify thermo
 
 router.post '/thermometer/changeTemp', (req, res, next) =>
   thermo = req.thermostat
