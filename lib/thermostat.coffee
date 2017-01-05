@@ -1,7 +1,7 @@
 debug = (require 'debug')('thermostat')
 EventEmitter = require 'events'
 
-if debug.enabled and false
+if process.env.DUMMY_THERMOSTAT?
   debug 'Running Fake Version of Thermostat'
   class DummySensor
     constructor: () ->
