@@ -1,12 +1,22 @@
+debug = (require 'debug')('thermostat')
 
 if not process.env.DUMMY_LCD?
   LCDPlate = (require 'adafruit-i2c-lcd').plate
 else
   class LCDPlate
     constructor: (id, loc) ->
+      @colors = {On: 1}
 
     message: (msg, clear) ->
-      console.log msg
+      debug msg
+
+    backlight: (color) ->
+
+    createChar: (id, spec) ->
+
+    on: (event, callback) ->
+
+
 
 module.exports =
 class ThermostatLCD
@@ -15,10 +25,13 @@ class ThermostatLCD
         @lcd = new LCDPlate(1, 0x20)
         @lcd.backlight @lcd.colors.ON
         @lcd.createChar 1, [28,20,28,0,0,0,0]
+
+        @degreeSymbol =  if process.env.DUMMY_LCD? then '\xB0' else'\x01'
+
         @CUR_PAT = 'AA'
         @SET_PAT = 'BB'
         @STATUS_PAT = 'CCC'
-        @line1 = @CUR_PAT + '\x01' + " ".repeat(14-@CUR_PAT.length - @SET_PAT.length) + @SET_PAT + '\x01'
+        @line1 = @CUR_PAT + @degreeSymbol + " ".repeat(14-@CUR_PAT.length - @SET_PAT.length) + @SET_PAT + @degreeSymbol
         @line2 = @STATUS_PAT + " ".repeat 16-@STATUS_PAT.length
 
         thermostat.onDidChange =>
@@ -41,7 +54,7 @@ class ThermostatLCD
 
         base = base.replace pat, str
 
-        console.log "+++ #{base}"
+        debug "+++ #{base}"
 
         return base
 
