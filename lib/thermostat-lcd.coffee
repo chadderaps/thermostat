@@ -13,14 +13,23 @@ class ThermostatLCD
 
     constructor: (thermostat) ->
         @lcd = new LCDPlate(1, 0x20)
-        @CUR_PAT = 'AAA'
-        @SET_PAT = 'BBB'
+        @lcd.backlight @lcd.colors.ON
+        @lcd.createChar 1, [28,20,28,0,0,0,0]
+        @CUR_PAT = 'AA'
+        @SET_PAT = 'BB'
         @STATUS_PAT = 'CCC'
-        @line1 = @CUR_PAT + " ".repeat(15-@CUR_PAT.length - @SET_PAT.length) + @SET_PAT
-        @line2 = @STATUS_PAT + " ".repeat 15-@STATUS_PAT.length
+        @line1 = @CUR_PAT + '\x01' + " ".repeat(14-@CUR_PAT.length - @SET_PAT.length) + @SET_PAT + '\x01'
+        @line2 = @STATUS_PAT + " ".repeat 16-@STATUS_PAT.length
 
         thermostat.onDidChange =>
           @update thermostat
+
+        @lcd.on 'button_up', (button) =>
+            @buttonReleased thermostat, button
+
+    buttonReleased: (thermostat, button) ->
+        thermostat.increaseTemp() if button == @lcd.buttons.UP
+        thermostat.decreaseTemp() if button == @lcd.buttons.DOWN
 
     insert: (base, pat, str, just) ->
         len = str.length
