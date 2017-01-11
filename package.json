@@ -20,6 +20,7 @@
     "morgan": "~1.7.0",
     "rpi-gpio": "~0.7.0",
     "serve-favicon": "~2.3.0",
-    "teacup": "~0.3.1"
+    "teacup": "~0.3.1",
+    "adafruit-i2c-lcd": "latest"
   }
 }
