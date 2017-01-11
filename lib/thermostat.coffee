@@ -1,5 +1,6 @@
 debug = (require 'debug')('thermostat')
 EventEmitter = require 'events'
+LCD = require './thermostat-lcd'
 
 if process.env.DUMMY_THERMOSTAT?
   debug 'Running Fake Version of Thermostat'
@@ -59,6 +60,7 @@ class Thermostat
     @emitter = new EventEmitter
     @setupGPIO()
     setInterval @readTemp.bind(@), 1000
+    @lcd = new LCD(@)
 
   setupGPIO: () ->
     gpio.setMode gpio.MODE_BCM
@@ -77,6 +79,7 @@ class Thermostat
 
   setCurTemp: (err, temp) ->
     throw err if err
+    temp = Math.round(temp, 0)
     update = temp != @curTemp
     @curTemp = temp
     @checkTemp() if update

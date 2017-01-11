@@ -49,7 +49,7 @@ app.use (err, req, res, next) =>
   console.log 'Got Error'
   console.log err.message
   console.log err.stack
-  debug "Error from url " + req.originalUrl
+  console.log "Error from url " + req.originalUrl
   res.locals.message = err.message
   res.locals.error = req.app.get('env') is 'development' ? err : {}
 
