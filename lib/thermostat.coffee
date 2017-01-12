@@ -4,48 +4,10 @@ LCD = require './thermostat-lcd'
 
 if process.env.DUMMY_THERMOSTAT?
   debug 'Running Fake Version of Thermostat'
-  class DummySensor
-    constructor: () ->
-      @curTemp = 35
-      return
-
-    readSimpleF: (digits, cb) ->
-      if typeof digits == 'function'
-        cb = digits
-        digits = 2
-      changeTemp = Math.random() * 10
-
-      debug "Change Temp is #{changeTemp}"
-
-      @curTemp = @curTemp + 1 if changeTemp > 9
-      @curTemp = @curTemp - 1 if changeTemp < 1
-
-      cb null, @curTemp
-
-  sensor = new DummySensor()
-
-  class DummyGPIO
-
-    constructor: () ->
-      return
-
-    setup: (pin, dir, callback) ->
-      debug "Setup " + pin + " with dir " + dir
-      callback null
-
-    setMode: (mode) ->
-      debug "Setting mode to " + mode
-
-    write: (pin, val, callback) ->
-      debug "Writing " + val + " to " + pin
-      callback null
-
-  gpio = new DummyGPIO()
-
-  gpio.DIR_OUT = 'OUT'
-  gpio.MODE_BCM = 'BCM'
-  gpio.MODE_RPI = 'RPI'
-
+  sensor = require './dummy/sensor'
+  console.log sensor
+  gpio = require './dummy/gpio'
+  console.log gpio
 else
   sensor = require 'ds18b20-raspi'
   gpio = require 'rpi-gpio'

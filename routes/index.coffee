@@ -1,5 +1,6 @@
 express = require 'express'
 debug = (require 'debug')('thermometer')
+passport = require 'passport'
 router = express.Router()
 
 debug "Initialized Index router"
@@ -8,7 +9,20 @@ debug "Initialized Index router"
 router.get '/', (req, res, next) =>
   thermo = req.thermostat
   curTemp = thermo.curTemp
-  res.render 'index', { title: 'Express', thermometer: thermo}
+  res.render 'index', { title: 'Express', thermometer: thermo, user: req.user}
+
+router.get '/login', (req, res, next) =>
+  res.render 'login', { }
+
+router.get '/login/google', (req, res, next) =>
+  console.log 'google auth'
+  passport.authenticate 'google', {scope: ['profile']}
+
+router.get '/login/google/callback', (req, res, next) =>
+  passport.authenticate 'google', {failureRedirect: '/login'},
+    (req, res) =>
+      console.log 'callback'
+      res.redirect '/'
 
 router.get '/thermometer', (req, res, next) =>
   thermo = req.thermostat

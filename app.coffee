@@ -9,10 +9,38 @@ thermostat = require './lib/thermostat'
 index = require './routes/index'
 users = require './routes/users'
 
+passport = require 'passport'
+Strategy = (require 'passport-google-oauth20').Strategy
+
+console.log require 'passport-google-oauth20'
+
 # database
 #mongo = require 'mongodb'
 #monk = require 'monk'
 #db = monk 'localhost:27017/nodetest2'
+
+console.log process.env.CLIENT_ID
+console.log process.env.CLIENT_SECRET
+
+passport.use(new Strategy({
+  clientID: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  callbackURL: 'http://localhost:3000/login/google/callback'
+  },
+  (accessToken, refreshToken, profile, cb) =>
+    console.log "Got key from google"
+    return cb null, profile
+))
+
+passport.serializeUser( (user, cb) =>
+  console.log 'ser'
+  cb null, user
+)
+
+passport.deserializeUser( (obj, cb) =>
+  console.log 'des'
+  cb null, obj
+)
 
 app = express();
 
@@ -29,6 +57,10 @@ app.use bodyParser.json()
 app.use bodyParser.urlencoded({ extended: false })
 app.use cookieParser()
 app.use express.static(path.join(__dirname, 'public'))
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+
+app.use passport.initialize()
+app.use passport.session()
 
 app.use (req, res, next) =>
   req.thermostat = thermo
