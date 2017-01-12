@@ -1,3 +1,4 @@
+cson = require 'cson'
 express = require 'express'
 path = require 'path'
 favicon = require 'serve-favicon'
@@ -5,6 +6,8 @@ logger = require 'morgan'
 cookieParser = require 'cookie-parser'
 bodyParser = require 'body-parser'
 thermostat = require './lib/thermostat'
+
+oauthkeys = cson.requireCSONFile './private/oauth.cson'
 
 index = require './routes/index'
 users = require './routes/users'
@@ -19,12 +22,9 @@ console.log require 'passport-google-oauth20'
 #monk = require 'monk'
 #db = monk 'localhost:27017/nodetest2'
 
-console.log process.env.CLIENT_ID
-console.log process.env.CLIENT_SECRET
-
 passport.use(new Strategy({
-  clientID: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
+  clientID: oauthkeys.google.CLIENT_ID,
+  clientSecret: oauthkeys.google.CLIENT_SECRET,
   callbackURL: 'http://localhost:3000/login/google/callback'
   },
   (accessToken, refreshToken, profile, cb) =>

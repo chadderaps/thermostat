@@ -8,7 +8,9 @@
   "dependencies": {
     "body-parser": "~1.15.2",
     "coffee-script": "~1.12.2",
+    "cson": "latest",
     "cookie-parser": "~1.4.3",
+    "cson": "^4.0.0",
     "debug": "~2.2.0",
     "ds18b20-raspi": "~0.2.4",
     "express": "~4.14.0",
@@ -19,10 +21,10 @@
     "mongoskin": "latest",
     "monk": "^1.0.1",
     "morgan": "~1.7.0",
+    "passport": "latest",
+    "passport-google-oauth20": "latest",
     "rpi-gpio": "~0.7.0",
     "serve-favicon": "~2.3.0",
-    "teacup": "~0.3.1",
-    "passport": "latest",
-    "passport-google-oauth20": "latest"
+    "teacup": "~0.3.1"
   }
 }
