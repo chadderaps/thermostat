@@ -19,7 +19,7 @@ router.get '/login/google',
 
 router.get '/login/google/callback',
   passport.authenticate 'google', {
-    failureRedirect: '/login',
+    failureRedirect: '/',
     successRedirect: '/'
   }
 

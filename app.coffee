@@ -25,7 +25,7 @@ console.log require 'passport-google-oauth20'
 passport.use(new Strategy({
   clientID: oauthkeys.google.CLIENT_ID,
   clientSecret: oauthkeys.google.CLIENT_SECRET,
-  callbackURL: 'http://localhost:3000/login/google/callback'
+  callbackURL: oauthkeys.google.CALLBACK_URL
   },
   (accessToken, refreshToken, profile, cb) =>
     console.log "Got key from google"
