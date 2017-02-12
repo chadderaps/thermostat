@@ -1,4 +1,4 @@
-debug = (require 'debug')('thermostat')
+debug = (require 'debug')('thermostat:control')
 EventEmitter = require 'events'
 LCD = require './thermostat-lcd'
 
@@ -17,12 +17,15 @@ class Thermostat
 
   constructor: () ->
     @heaterGPIO = { id: 17, init: false }
-    @minTemp = 70
+    @minTemp = if debug.enabled then 35 else 70
     @tempThreshold = 0
     @emitter = new EventEmitter
     @setupGPIO()
     setInterval @readTemp.bind(@), 1000
     @lcd = new LCD(@)
+
+  setConfig: (config) ->
+    debug 'Setting Config'
 
   setupGPIO: () ->
     gpio.setMode gpio.MODE_BCM
@@ -38,6 +41,10 @@ class Thermostat
   onDidChange: (callback) ->
     debug "Waiting for a change"
     @emitter.once 'did-change', callback
+
+  onStatusChange: (callback) ->
+    debug "Waiting for a status change"
+    @emitter.on 'did-change-status', callback
 
   setCurTemp: (err, temp) ->
     throw err if err
@@ -84,7 +91,8 @@ class Thermostat
 
     debug "Did Change"
 
-    @emitter.emit 'did-change'
+    @emitter.emit 'did-change', @
+    @emitter.emit 'did-change-status', @ if old_status != @status
 
   On: () ->
     return @status

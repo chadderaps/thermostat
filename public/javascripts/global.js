@@ -4,16 +4,42 @@ $(document).ready(function() {
 
   $.ajaxSetup({timeout: 5000})
   // Get the temperature and fill the fields
-  getThermometer();
+  //getThermostat();
 
-  //setInterval(getThermometer, 2000);
+  //setInterval(getThermostat, 2000);
+  alert(document.location.origin);
+  var socket = io.connect(document.location.origin);
+
+  socket.emit('temperature', 'chad deraps');
+  socket.on('reconnect', function() {
+    console.log('Reconnecting to the server');
+    socket.emit('temperature', 'chad deraps');
+  });
+
+  socket.on('reconnecting', function () {
+    console.log('Attempting to reconnect to the server');
+  });
+
+  socket.on('temperature', function(data) {
+    var tempLabel = $('#lblCurTemp');
+    tempLabel.html(data.temperature);
+  });
 
 });
 
 function changeTemp(dir) {
   var data = {'direction':dir}
-  $.post('/thermometer/changeTemp', {direction: dir});
-  //getThermometer();
+  //$.post('http://localhost:3001/thermostat/changeTemp', {direction: dir});
+  $.ajax({
+    type: 'POST',
+    url: '/thermostat/changeTemp',
+    contentType: 'application/json',
+    dataType: 'json',
+    data: JSON.stringify({direction: dir}),
+    success: function () {
+      console.log('Done Posting')
+    }
+  });
 };
 
 // Functions =============================================================
@@ -30,15 +56,15 @@ function loadThermostat(therm) {
       setThermostatState(thermo.status);
     }
 
-    getThermometer();
+    getThermostat();
 }
 
-function getThermometer() {
+function getThermostat() {
   $.ajax({
-    url: '/thermometer',
+    url: '/thermostat/currentTemp',
     dataType: 'json',
     success: loadThermostat,
-    error: getThermometer
+    error: loadThermostat,
   });
 };
 

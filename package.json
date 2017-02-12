@@ -6,25 +6,27 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "aws-sdk": "latest",
     "body-parser": "~1.15.2",
     "coffee-script": "~1.12.2",
-    "cson": "latest",
     "cookie-parser": "~1.4.3",
     "cson": "^4.0.0",
     "debug": "~2.2.0",
     "ds18b20-raspi": "~0.2.4",
     "express": "~4.14.0",
+    "express-http-proxy": "^0.11.0",
     "express-session": "latest",
+    "express-ws": "^2.0.0",
     "jade": "~1.11.0",
+    "jade-bootstrap": "latest",
     "jstransformer-coffee-script": "^1.1.0",
-    "mongodb": "~2.1.2",
-    "mongoskin": "latest",
-    "monk": "^1.0.1",
     "morgan": "~1.7.0",
     "passport": "latest",
     "passport-google-oauth20": "latest",
+    "passport-http": "latest",
     "rpi-gpio": "~0.7.0",
     "serve-favicon": "~2.3.0",
+    "socket.io": "^1.7.2",
     "teacup": "~0.3.1"
   }
 }
