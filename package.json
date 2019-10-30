@@ -20,7 +20,7 @@
     "jade": "~1.11.0",
     "jade-bootstrap": "latest",
     "jstransformer-coffee-script": "^1.1.0",
-    "morgan": "~1.7.0",
+    "morgan": "~1.9.1",
     "passport": "latest",
     "passport-google-oauth20": "latest",
     "passport-http": "latest",
